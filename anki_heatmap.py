@@ -15,12 +15,12 @@ class AnkiHeatmapWidget:
     def __init__(self):
         # Create window WITH decorations for minimize and maximize
         self.window = Gtk.Window(title="Anki Heatmap")
-        self.window.set_default_size(400, 200)
-        self.window.set_decorated(True)  # Enable window decorations (minimize, maximize, close)
+        self.window.set_default_size(500, 250)
+        self.window.set_decorated(False)  # Enable window decorations (minimize, maximize, close)
         self.window.set_keep_above(False)  # Do not keep widget above other windows (run in background)
-        self.window.set_skip_taskbar_hint(False)  # Show in taskbar
+        self.window.set_skip_taskbar_hint(True)  # Show in taskbar
         self.window.connect("destroy", Gtk.main_quit)
-        
+        self.window.stick()
         # Make window movable by dragging
         self.window.add_events(Gdk.EventMask.BUTTON_PRESS_MASK | 
                               Gdk.EventMask.BUTTON_RELEASE_MASK |
@@ -128,15 +128,8 @@ class AnkiHeatmapWidget:
         button_box.pack_start(launch_button, True, True, 0)
         
         # Add minimize to tray button
-        minimize_button = Gtk.Button.new_with_label("Run in Background")
-        minimize_button.connect("clicked", self.on_minimize_clicked)
-        button_box.pack_start(minimize_button, True, True, 0)
-        
         main_box.pack_start(button_box, False, False, 0)
     
-    def on_minimize_clicked(self, button):
-        """Handle minimize to background button click"""
-        self.window.iconify()  # Minimize window
     
     def find_anki_collection(self):
         """Find the Anki collection file path"""
@@ -431,7 +424,6 @@ class AnkiHeatmapWidget:
             count_label.set_markup("<i>No reviews</i>")
         tooltip_box.pack_start(count_label, False, False, 0)
         
-        self.tooltip_window.add(tooltip_box)
         
         # Position tooltip near mouse
         x, y = self.window.get_position()
